@@ -4,6 +4,9 @@ import { BrowserRouter } from 'react-router-dom';
 import App from '@layouts/App';
 
 render(
+  /**
+   * React-router를 사용하려면 App 컴포넌트를 BrowserRouter로 감싸야 한 
+   */
   <BrowserRouter>
     <App />
   </BrowserRouter>,

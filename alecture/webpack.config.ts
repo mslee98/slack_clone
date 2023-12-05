@@ -1,13 +1,17 @@
 import path from 'path';
-import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';//핫 리로딩 
 import webpack, { Configuration as WebpackConfiguration } from "webpack";
-import { Configuration as WebpackDevServerConfiguration } from "webpack-dev-server";
+import { Configuration as WebpackDevServerConfiguration } from "webpack-dev-server";//핫 리로
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 interface Configuration extends WebpackConfiguration {
   devServer?: WebpackDevServerConfiguration;
 }
 
+/**
+ * TS가 검사할 때 블로킹식으로 검사한다고 함
+ * 아래를 쓰면 웹팩과 TS검사가 순서대로 처리되는게 동시에 된다고 함 
+ */
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -18,7 +22,7 @@ const config: Configuration = {
   devtool: !isDevelopment ? 'hidden-source-map' : 'eval',
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
-    alias: {
+    alias: { //@이든 ~든 상관은 없음, 아무것도 안붙여도 
       '@hooks': path.resolve(__dirname, 'hooks'),
       '@components': path.resolve(__dirname, 'components'),
       '@layouts': path.resolve(__dirname, 'layouts'),
@@ -29,6 +33,7 @@ const config: Configuration = {
   },
   entry: {
     app: './client',
+    //app2: './client' 결과물을 1나만 만드는것이 아닌 여러개 만드는 것도 가능함
   },
   module: {
     rules: [
@@ -49,8 +54,12 @@ const config: Configuration = {
           ],
           env: {
             development: {
-              plugins: [require.resolve('react-refresh/babel')],
+              //원래 @emotion/babel-plugin인데 @emotion으로 생략 가능 
+              plugins: [['@emotion', {sourcemaps: true}], require.resolve('react-refresh/babel')],//핫 리로딩 적용
             },
+            production: {
+              plugins: ['@emotion'],
+            }
           },
         },
         exclude: path.join(__dirname, 'node_modules'),
@@ -72,9 +81,13 @@ const config: Configuration = {
   ],
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: '[name].js',
+    filename: '[name].js', // 이거를 통해서 결과물이 31번 째 줄인 client.js가 app.js로 나옴
     publicPath: '/dist/',
   },
+
+  /**
+   * hot reloading 세팅
+   */
   devServer: {
     historyApiFallback: true, // react router
     port: 3090,

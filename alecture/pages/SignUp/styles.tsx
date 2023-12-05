@@ -1,3 +1,5 @@
+
+/** styled component */
 import styled from '@emotion/styled';
 
 export const Header = styled.header`
@@ -17,6 +19,10 @@ export const Form = styled.form`
   max-width: 400px;
 `;
 
+/**
+ * & > span 나의 자식인 span 태그에게 적용
+ * &:focus 내가 지금 focus 되어 있는 상태
+ */
 export const Label = styled.label`
   margin-bottom: 16px;
   & > span {
