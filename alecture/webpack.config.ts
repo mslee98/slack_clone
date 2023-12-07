@@ -93,6 +93,8 @@ const config: Configuration = {
     port: 3090,
     devMiddleware: { publicPath: '/dist/' },
     static: { directory: path.resolve(__dirname) },
+    // CROS를 해결하는 방법은 2가지가 있는데 프론트쪽에서 해결하고 싶다면 이 부분 코드가 있어야 함
+    // 아래 코드는 Front에서 /api/ 로 보내는 요청은 3095로 변경해서 보내겠다라는 소리임
     proxy: {
       '/api/': {
         target: 'http://localhost:3095',

@@ -33,6 +33,7 @@ if (prod) {
   app.use(hpp());
 } else {
   app.use(morgan("dev"));
+  // 같은 localhost라고 할지라도 다른 포트로 보내면 CROS가 나타남 아래는 그걸 허용해주는 코드임
   app.use(
     cors({
       origin: true,
