@@ -3,9 +3,7 @@ import React from 'react';
 
 const DirectMessage = () => {
     return (
-        <Workspace>
-            <div>sss</div>
-        </Workspace>
+        <div>dm</div>
     )
 }
 
