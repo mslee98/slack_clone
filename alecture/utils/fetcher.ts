@@ -10,11 +10,12 @@ import axios from 'axios';
  * @param url 
  * @returns response.data
  */
-const fetcher = (url: string) => 
+const fetcher = <Data>(url: string) => 
     axios
         .get(url, {
             withCredentials: true
         })
         .then( (response) => response.data)
+
 
 export default fetcher;

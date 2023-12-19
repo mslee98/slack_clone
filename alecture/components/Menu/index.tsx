@@ -5,7 +5,7 @@ import { CloseButton } from 'react-toastify/dist/components';
 
 interface Props {
     show: boolean;
-    onCloseModal: () => void;
+    onCloseModal: (e:any) => void;
     style: CSSProperties;
     closeButton?: boolean; // ?있을수도 없을수도 있다는 뜻
 }
@@ -21,6 +21,8 @@ const Menu : FC<Props> = ({children, style, show, onCloseModal, closeButton}) =>
         e.stopPropagation();
     }, []);
     
+    if(!show) return null;
+
     return (
         /**
          * CreateMenu 부모 영역(모달 바깥 영역)을 클릭했을 때 닫게
