@@ -1,7 +1,7 @@
 import fetcher from '@utils/fetcher';
 import axios from 'axios';
 import React, { VFC, useCallback, useState } from 'react';
-import { Redirect, Route, Switch } from 'react-router';
+import { Redirect, Route, Switch, useParams } from 'react-router';
 import useSWR from 'swr';
 import gravatar from 'gravatar';
 import {
@@ -23,11 +23,15 @@ import {
 import loadable from '@loadable/component';
 import Menu from '@components/Menu';
 import { Link } from 'react-router-dom';
-import { IUser } from '@typings/db';
+import { IChannel, IUser } from '@typings/db';
 import { Button, Input, Label } from '@pages/SignUp/styles';
 import useInput from '@hooks/useInput';
 import { toast } from 'react-toastify';
 import CreateChannelModal from '@components/CreateChannelModal';
+import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
+import InviteChannelModal from '@components/InviteChannelModal';
+import DMList from '@components/DMList';
+import ChannelList from '@components/ChannelList';
 
 
 const Channel = loadable(() => import('@pages/Channel'));
@@ -42,26 +46,42 @@ const Modal = loadable(() => import('@components/Modal'))
  */
 const Workspace : VFC = () => {
 
-   /**
-    * 보면 useSWR<IUser | false> / IUser 는 /alecture/typings/db.ts로 DB별 타입이 정의된 파일임
-    * 제네릭으로 IUser를 적어주면 되는데 문제는 로그인 정보가 없을 때는 false로 mutate(false)이 부분에서 에러가 나기 때문에
+  const {workspace} = useParams<{workspace: string}>()
+  /**
+   * 보면 useSWR<IUser | false> / IUser 는 /alecture/typings/db.ts로 DB별 타입이 정의된 파일임
+   * 제네릭으로 IUser를 적어주면 되는데 문제는 로그인 정보가 없을 때는 false로 mutate(false)이 부분에서 에러가 나기 때문에
     * <IUser | false>로 정의함
-    */
-    const { data : userData, error, revalidate, mutate } = useSWR<IUser | false>('/api/users', fetcher);
+    * 
+    * useSWR 버전 업그레이드 인해 revalidate => mutate()로 변경되었다고 함..
+  */
+    const { data : userData, error, mutate } = useSWR<IUser | false>('/api/users', fetcher);
     /**
      * 아래 data: userData 이런식으로 변수 개명할수도 있음
-     */
-    // const { data: userData, error, revalidate, mutate } = useSWR('/api/users', fetcher);
+    */
+   // const { data: userData, error, revalidate, mutate } = useSWR('/api/users', fetcher);
+    
+   
+   const { data: channerData } = useSWR<IChannel[]>(
+      userData? `/api/workspaces/${workspace}/channels`: null, 
+      fetcher
+    );
+
+    const { data: memberData } = useSWR<IChannel[]>(
+      userData? `/api/workspaces/${workspace}/member`: null, 
+      fetcher
+    );
 
     const [showUserMenu, setShowUserMenu] = useState(false);
     const [showCreateWorkspaceModal, setShowCreateWorkspaceModal] = useState(false);
     const [showCreateChannelModal, setShowCreateChannelModal] = useState(false);
     const [showWorkspaceModal, setShowWorkspaceModal] = useState(false);
+    const [showInviteWorkspaceModal, setShowInviteWorkspaceModal] = useState(false);
+    const [showInviteChannelModal, setShowInviteChannelModal] = useState(false);
     const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
     const [newUrl, onChangeNewUrl, setNewUrl] = useInput('');
 
     const onLogout = useCallback(() => {
-        axios.post('http://localhost:3095/api/users/logout', null, {
+        axios.post('/api/users/logout', null, {
             withCredentials: true // 쿠키 공유
         })
         .then(() => {
@@ -97,15 +117,15 @@ const Workspace : VFC = () => {
         return;
       }
       
-      axios.post('http://localhost:3095/api/workspaces', {
+      axios.post('/api/workspaces', {
         workspace: newWorkspace,
         url: newUrl
       },{
         //이게 있어야 만 내가 로그인 한 상태라고 서버가 알 수 있다고 함
         withCredentials: true
       })
-        .then(() => {
-          revalidate();
+        .then((response) => {
+          mutate(response.data, false);
           setShowCreateWorkspaceModal(false);
           setNewWorkspace('');
           setNewUrl('')
@@ -122,6 +142,8 @@ const Workspace : VFC = () => {
     const onCloseModal = useCallback(() => {
       setShowCreateWorkspaceModal(false);
       setShowCreateChannelModal(false);
+      setShowInviteWorkspaceModal(false)
+      setShowInviteChannelModal(false)
     }, [])
     
     const onClickAddChannel = useCallback(() => {
@@ -133,8 +155,12 @@ const Workspace : VFC = () => {
     },[]);
 
     const onClickInviteWorkspace = useCallback(() => {
-
+      setShowInviteWorkspaceModal(true)
+      
     }, [])
+
+
+
     
     /**
      * 아래도 !data로 하면 괜찮을 줄 알았는데, data 초기값은 false임 그래서 상세하게 명시해줘야한다.
@@ -167,9 +193,12 @@ const Workspace : VFC = () => {
           </Header>
           <WorkspaceWrapper>
             <Workspaces>
-              {userData?.Workspaces.map((ws) => {
+              {userData?.Workspaces?.map((ws) => {
+
+                console.log("ssssss", userData)
+
                 return (
-                  <Link key={ws.id} to={'/workspace/${}/channel/일반'}>
+                  <Link key={ws.id} to={`/workspace/${userData.Workspaces}/channel/일반`}>
                     <WorkspaceButton>{ws.name.slice(0,1).toUpperCase()}</WorkspaceButton>
                   </Link>
                 )
@@ -187,12 +216,15 @@ const Workspace : VFC = () => {
                       <button onClick={onLogout}>로그아웃</button>
                     </WorkspaceModal>
                   </Menu>
+                  <ChannelList />
+                  <DMList />
+                  {/* {channerData?.map((v) => (<div>{v.name}</div>) )} */}
                 </MenuScroll>
             </Channels>
             <Chats>
               <Switch>
-                <Route path="/workspace/channel" component={Channel} />
-                <Route path="/workspace/dm" component={DirectMessage} />
+                <Route path="/workspace/:workspace/channel/:channel" component={Channel} />
+                <Route path="/workspace/:workspace/dm/:id" component={DirectMessage} />
               </Switch>
             </Chats>
           </WorkspaceWrapper>
@@ -209,7 +241,9 @@ const Workspace : VFC = () => {
               <Button type="submit">생성하기</Button>
             </form>
           </Modal>
-          <CreateChannelModal show={showCreateChannelModal} onCloseModal={onCloseModal} />
+          <CreateChannelModal show={showCreateChannelModal} onCloseModal={onCloseModal} setShowCreateChannelModal={setShowCreateChannelModal} />
+          <InviteWorkspaceModal show={showInviteWorkspaceModal} onCloseModal={onCloseModal} setShowInviteWorkspaceModal={setShowInviteWorkspaceModal}/>
+          <InviteChannelModal show={showInviteChannelModal} onCloseModal={onCloseModal} setShowInviteChannelModal={setShowInviteChannelModal}/>
         </div>
       );
 }
