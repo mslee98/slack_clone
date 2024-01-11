@@ -8,6 +8,7 @@ import ChatBox from '@components/ChatBox';
 import useInput from '@hooks/useInput';
 import axios from 'axios';
 import { IDM } from '@typings/db';
+import ChatList from '@components/ChatList';
 
 const DirectMessage = () => {
     const { workspace, id } = useParams<{workspace: string, id: string}>();
@@ -26,8 +27,8 @@ const DirectMessage = () => {
         e.preventDefault();
 
         if(chat?.trim()) {
-            axios.post(`/api/workspaces/${workspace}/dsm/${id}/chats`, {
-                contents: chat,
+            axios.post(`/api/workspaces/${workspace}/dms/${id}/chats`, {
+                content: chat,
             })
                 .then(() => {
                     revalidate(); 
@@ -42,13 +43,13 @@ const DirectMessage = () => {
         return null;
     }
     
-
-
     return (
         <Container>
             <Header>
                 <img src={gravatar.url(userData.email, {s:'24px', d:'retro'})} alt={userData.nickname} />
+                <span>{userData.nickname}</span>
             </Header>
+            <ChatList chatData={chatData} />
             <ChatBox chat={chat} onSubmitForm={onSubmitForm} onChangeChat={onChangeChat}/>
         </Container>
     )

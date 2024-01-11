@@ -1,10 +1,19 @@
+import Chat from '@components/Chat';
 import { ChatZone } from '@components/ChatList/styles';
-import React from 'react';
+import { IDM } from '@typings/db';
+import React, { VFC } from 'react';
 
-const ChatList = () => {
+interface Props {
+    //IDM은 DM타입임
+    chatData?: IDM[]
+}
+
+const ChatList: VFC<Props> = ({chatData}) => {
     return (
         <ChatZone>
-
+            {chatData?.map((chat) => (
+                <Chat key={chat.id} data={chat}/>
+            ))}
         </ChatZone>
     )
 }
