@@ -1,6 +1,6 @@
 import fetcher from '@utils/fetcher';
 import axios from 'axios';
-import React, { VFC, useCallback, useState } from 'react';
+import React, { VFC, useCallback, useEffect, useReducer, useState } from 'react';
 import { Redirect, Route, Switch, useParams } from 'react-router';
 import useSWR from 'swr';
 import gravatar from 'gravatar';
@@ -32,6 +32,7 @@ import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
 import InviteChannelModal from '@components/InviteChannelModal';
 import DMList from '@components/DMList';
 import ChannelList from '@components/ChannelList';
+import useScoket from '@hooks/useSocket';
 
 
 const Channel = loadable(() => import('@pages/Channel'));
@@ -61,7 +62,7 @@ const Workspace : VFC = () => {
    // const { data: userData, error, revalidate, mutate } = useSWR('/api/users', fetcher);
     
    
-   const { data: channerData } = useSWR<IChannel[]>(
+   const { data: channelData } = useSWR<IChannel[]>(
       userData? `/api/workspaces/${workspace}/channels`: null, 
       fetcher
     );
@@ -79,6 +80,26 @@ const Workspace : VFC = () => {
     const [showInviteChannelModal, setShowInviteChannelModal] = useState(false);
     const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
     const [newUrl, onChangeNewUrl, setNewUrl] = useInput('');
+    const [socket, disconnect] = useScoket(workspace);
+
+
+    // socket connect
+    useEffect(() => {
+      if(channelData && userData && socket) {
+        socket.emit('login', {
+          id: userData.id,
+          channels: channelData.map((v) => v.id),
+        })
+
+      }
+    }, [channelData, userData, socket])
+
+    //socket disconnect - 워크스페이스가 변경될 때
+    useEffect(() => {
+      return () => {
+        disconnect();
+      }
+    }, [workspace, disconnect])
 
     const onLogout = useCallback(() => {
         axios.post('/api/users/logout', null, {
@@ -194,9 +215,6 @@ const Workspace : VFC = () => {
           <WorkspaceWrapper>
             <Workspaces>
               {userData?.Workspaces?.map((ws) => {
-
-                console.log("ssssss", userData)
-
                 return (
                   <Link key={ws.id} to={`/workspace/${userData.Workspaces}/channel/일반`}>
                     <WorkspaceButton>{ws.name.slice(0,1).toUpperCase()}</WorkspaceButton>

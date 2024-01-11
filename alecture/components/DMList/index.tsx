@@ -1,10 +1,11 @@
 import { IUser, IUserWithOnline } from "@typings/db";
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import useSWR from "swr";
 import fetcher from '@utils/fetcher';
 import { CollapseButton } from "@components/DMList/styles";
 import { NavLink } from "react-router-dom";
+import useSocket from "@hooks/useSocket";
 
 
 // interface Props {
@@ -27,9 +28,12 @@ const DMList: FC = () => {
      * VO(DTO) 같은 것들을 리스트형식으로 받는 타입 형식은 IUserWithOnlone[] 형태로 많이 쓰는것 같음!
     */
     const { data: memberData } = useSWR<IUserWithOnline[]>(
+
         userData? `/api/workspaces/${workspace}/members` : null,
         fetcher 
     )
+    
+    const [socket] = useSocket(workspace);
 
     /** 회원 목록을 나타내는 on/off 버튼 */
     const [channelCollapse, setChannelCollapse] = useState(false)
@@ -49,6 +53,24 @@ const DMList: FC = () => {
 
     // })
 
+    useEffect(() => {
+        console.log('DMList: workspace 바꼈다', workspace);
+        setOnlineList([]);
+      }, [workspace]);
+    
+      useEffect(() => {
+        socket?.on('onlineList', (data: number[]) => {
+          setOnlineList(data);
+        });
+        // socket?.on('dm', onMessage);
+        // console.log('socket on dm', socket?.hasListeners('dm'), socket);
+        return () => {
+          // socket?.off('dm', onMessage);
+          // console.log('socket off dm', socket?.hasListeners('dm'));
+          socket?.off('onlineList');
+        };
+      }, [socket]);
+
     return (
         <>
         <h2>
@@ -65,6 +87,7 @@ const DMList: FC = () => {
             {!channelCollapse &&
             memberData?.map((member) => {
                 const isOnline = onlineList.includes(member.id);
+                const count = countList[member.id] || 0;
                 return (
                 <NavLink key={member.id} activeClassName="selected" to={`/workspace/${workspace}/dm/${member.id}`}>
                     <i

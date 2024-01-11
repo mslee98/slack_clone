@@ -6,6 +6,8 @@ import gravatar from 'gravatar';
 import { useParams } from 'react-router';
 import ChatBox from '@components/ChatBox';
 import useInput from '@hooks/useInput';
+import axios from 'axios';
+import { IDM } from '@typings/db';
 
 const DirectMessage = () => {
     const { workspace, id } = useParams<{workspace: string, id: string}>();
@@ -14,9 +16,27 @@ const DirectMessage = () => {
     const { data: myData} = useSWR(`/api/users`, fetcher);
     const [chat, onChangeChat, setChat] = useInput('');
 
-    const onSubmitForm = useCallback(() => {
+    // 채팅을 받아오는 api
+    const { data: chatData, mutate: mutateChat, revalidate} = useSWR<IDM[]>(
+        `/api/workspaces/${workspace}/dms/${id}/chats?perPage=20&page=1`,
+        fetcher
+    )
 
-    }, []);
+    const onSubmitForm = useCallback((e) => {
+        e.preventDefault();
+
+        if(chat?.trim()) {
+            axios.post(`/api/workspaces/${workspace}/dsm/${id}/chats`, {
+                contents: chat,
+            })
+                .then(() => {
+                    revalidate(); 
+                    setChat('');
+                })
+                .catch(console.error);
+        }
+
+    }, [chat]);
 
     if(!userData || !myData) {
         return null;

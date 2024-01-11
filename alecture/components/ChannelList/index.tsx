@@ -1,7 +1,6 @@
 import { CollapseButton } from '@components/ChannelList/styles';
 import { IChannel, IUser } from '@typings/db';
 import fetcher from '@utils/fetcher';
-import { features } from 'process';
 import React, { FC, useCallback, useState } from 'react';
 import { useLocation, useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
