@@ -11,11 +11,14 @@ import axios from 'axios';
  * @returns response.data
  */
 const fetcher = <Data>(url: string) => 
+
+
     axios
-        .get(url, {
-            withCredentials: true
-        })
-        .then( (response) => response.data)
+    .get(url, {
+        withCredentials: true
+    })
+    .then( (response) => response.data)
+    .catch(() => console.log("sssssssss",url))
 
 
 export default fetcher;
