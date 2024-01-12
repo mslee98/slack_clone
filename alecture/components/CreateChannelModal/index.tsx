@@ -25,7 +25,11 @@ const CreateChannelModal : VFC<Props> = ({show, onCloseModal, setShowCreateChann
     const { data: userData, error, revalidate } = useSWR<IUser | false>('/api/users', fetcher, {
         dedupingInterval: 2000, // 2초
       });
-    const { data: channerData, mutate, revalidate: revalidateChannel } = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels`: null, fetcher)
+
+    const { data: channerData, mutate, revalidate: revalidateChannel } = useSWR<IChannel[]>(
+      userData ? `/api/workspaces/${workspace}/channels`: null, 
+      fetcher
+    );
 
     const onCreateChannel = useCallback(
         (e) => {

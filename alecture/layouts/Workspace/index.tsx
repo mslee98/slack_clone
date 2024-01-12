@@ -60,7 +60,7 @@ const Workspace : VFC = () => {
      * 아래 data: userData 이런식으로 변수 개명할수도 있음
     */
    // const { data: userData, error, revalidate, mutate } = useSWR('/api/users', fetcher);
-    
+    console.log(userData);
    
    const { data: channelData } = useSWR<IChannel[]>(
       userData? `/api/workspaces/${workspace}/channels`: null, 
@@ -216,7 +216,7 @@ const Workspace : VFC = () => {
             <Workspaces>
               {userData?.Workspaces?.map((ws) => {
                 return (
-                  <Link key={ws.id} to={`/workspace/${userData.Workspaces}/channel/일반`}>
+                  <Link key={ws.id} to={`/workspace/${ws.name}/channel/일반`}>
                     <WorkspaceButton>{ws.name.slice(0,1).toUpperCase()}</WorkspaceButton>
                   </Link>
                 )

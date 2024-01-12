@@ -78,7 +78,9 @@ const Login = () => {
             .then((response) => {
               console.log("###############로그인 성공")
               // revalidate(); 지금 이렇게 보면 위에서 axios로 post 요청을 보내고 성공 시 revelidate()로 재요청을 하는데 불필요함
-              mutate(response.data, false);//뒤에 false는 shouldRevalidate인데 데이터를 변경하고 서버에 점검하면서 요청을 보낸다고 함 끄러면 false
+              revalidate()
+              // mutate(response.data, false);//뒤에 false는 shouldRevalidate인데 데이터를 변경하고 서버에 점검하면서 요청을 보낸다고 함 끄러면 false
+
               // 이게 생각보다 엄청 유용한 기능임
               // 인스타 하트, 페이스북 좋아요 등 생각해보면 서버 요청하고 색이 변경해야 되는건데 지금보면 즉시 반영이 된다.
               // 이게 바로 mutate 기능이라고 하며 "OPTIMISTIC UI"라고도 함, 직역하면 낙관적인 UI인데 요청이 무조건적으로 성공할것으로보고 즉시 반영하는걸 말한다.
