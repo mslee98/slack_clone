@@ -195,7 +195,7 @@ const Workspace : VFC = () => {
           <Header>
             <RightMenu>
                     <span onClick={onClickUserProfile}>
-                        <ProfileImg src={gravatar.url(userData.nickname, {s: '28px', d: 'retro'})} alt={userData.email}/>
+                        <ProfileImg src={gravatar.url(userData.email, {s: '28px', d: 'retro'})} alt={userData.email}/>
                         {showUserMenu && (
                           // Menu 컴포넌트에게 props로 전달
                           <Menu style={{right:0, top: 38}} show={showUserMenu} onCloseModal={onClickUserProfile}>
