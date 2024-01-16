@@ -23,7 +23,7 @@ const App = () => {
          * url주소가 "/" 이런식으로 오면 Login 페이지를 올 수 있게끔 해줌
          */
         <Switch>
-            <Redirect exact path="/" to="/Login"/>
+            <Redirect exact path="/" to="/LogIn"/>
             <Route path="/login" component={Login}/>
             <Route path="/signup" component={SignUp}/>
             <Route path="/workspace/:workspace" component={Workspace} />
