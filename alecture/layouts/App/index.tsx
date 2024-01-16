@@ -8,7 +8,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 // import Login from '@pages/Login';
 // import SignUp from '@pages/SignUp';
-const Login = loadable(() => import('@pages/Login'));
+const Login = loadable(() => import('@pages/LogIn'));
 const SignUp = loadable(() => import('@pages/SignUp'));
 // const Channel = loadable(() => import('@pages/Channel'));
 // const DirectMessage = loadable(() => import('@pages/DirectMessage'))
@@ -23,7 +23,7 @@ const App = () => {
          * url주소가 "/" 이런식으로 오면 Login 페이지를 올 수 있게끔 해줌
          */
         <Switch>
-            <Redirect exact path="/" to="/LogIn"/>
+            <Redirect exact path="/" to="/Login"/>
             <Route path="/login" component={Login}/>
             <Route path="/signup" component={SignUp}/>
             <Route path="/workspace/:workspace" component={Workspace} />
