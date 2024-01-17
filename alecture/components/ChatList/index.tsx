@@ -1,16 +1,16 @@
 import Chat from '@components/Chat';
 import { ChatZone, Section, StickyHeader } from '@components/ChatList/styles';
 import { Button } from '@pages/SignUp/styles';
-import { IDM } from '@typings/db';
+import { IChat, IDM } from '@typings/db';
 import React, { ForwardedRef, RefObject, VFC, forwardRef, useCallback, useRef } from 'react';
 import Scrollbars from 'react-custom-scrollbars';
 
 interface Props {
     //IDM은 DM타입임
 
-    chatSections: { [key: string]: IDM[]}
+    chatSections: { [key: string]: (IDM | IChat)[]}
     // chatData?: IDM[]
-    setSize: (f: (size: number) => number) => Promise<IDM[][] | undefined>
+    setSize: (f: (size: number) => number) => Promise<(IDM | IChat)[][] | undefined>
     isReachingEnd: boolean;
     scrollRef: RefObject<Scrollbars>;
 }

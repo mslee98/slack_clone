@@ -123,7 +123,7 @@ const DirectMessage = () => {
     }
 
     //flat() 2차원 배열을 1차원 배열로 바꿈.
-    const chatSections = makeSection(chatData ? [...chatData].flat().reverse() : []);
+    const chatSections = makeSection(chatData ? chatData.flat().reverse() : []);
     
     return (
         <Container>
