@@ -1,4 +1,4 @@
-import { IDM } from '@typings/db';
+import { IChat, IDM } from '@typings/db';
 import React, { VFC, memo, useMemo } from 'react';
 import { ChatWrapper } from '@components/Chat/styles';
 import gravatar from 'gravatar';
@@ -14,14 +14,17 @@ import { Link, useParams } from 'react-router-dom';
  */
 
 interface Props {
-    data: IDM;
+    data: IDM | IChat;
 }
 
 //말단 컴포넌트들은 가능하면 memo 사용
 // memo는 props가 똑같으면 부모가 바뀌어도 자식을 리렌더링하지 않음
 const Chat: VFC<Props> = memo(({ data }) => {
     const {workspace} = useParams<{workspace: string; channel: string}>();
-    const user = data.Sender;
+    
+    // const user = data.Sender;
+    // data객체안에 Sender가 있으면 data.Sender를 그렇지 않으면 data.User를 뜻하는데 이런게 바로 타입가드임
+    const user = 'Sender' in data ? data.Sender : data.User;
 
 
     /**

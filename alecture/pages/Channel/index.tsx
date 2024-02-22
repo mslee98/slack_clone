@@ -29,7 +29,7 @@ const Channel = () => {
         // </Workspace>
         <Container>
             <Header>채널</Header>
-            {/* <ChatList /> */}
+            {/* <ChatList chatSections={chatSections} scrollRef={scrollbarRef} setSize={setSize} isReachingEnd={isReachingEnd} /> */}
             <ChatBox chat={chat} onChangeChat={onChangeChat} onSubmitForm={onSubmitForm}/>
         </Container>
     );
