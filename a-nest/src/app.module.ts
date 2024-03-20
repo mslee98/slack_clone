@@ -12,6 +12,7 @@ import { UsersModule } from './users/users.module';
 import { WorkspacesModule } from './workspaces/workspaces.module';
 import { ChannelsModule } from './channels/channels.module';
 import { DmsModule } from './dms/dms.module';
+import { UsersService } from './users/users.service';
 
 /**
  * forRoot(), forFeature(), register() => 위에 3개를 사용하는 이유는 따로 설정을 하기 위해서 필요
@@ -37,7 +38,7 @@ import { DmsModule } from './dms/dms.module';
   /** 딱 봐도 미들웨어 중심이 아니고 모듈 중심이란게 느껴짐 */
   imports: [ConfigModule.forRoot({ isGlobal: true }), UsersModule, WorkspacesModule, ChannelsModule, DmsModule],
   controllers: [AppController],
-  providers: [AppService, ConfigService],
+  providers: [AppService, ConfigService, UsersService],
 })
 
 /**

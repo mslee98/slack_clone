@@ -1,8 +1,10 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('DM')
 @Controller('api/workspaces/:url/dms')
 export class DmsController {
-
+    constructor() {}
     /**
      * @Query
      * @Query() 를 통해 쿼리파라미터를 받을 수 있으며
@@ -16,6 +18,26 @@ export class DmsController {
      * 지금 밑에 보면 Get(":id/chats") 으로 받아오면
      * @Param() param => param.id 이런식으로 받아오기 가능
      */
+    @ApiParam({
+        name: 'url',
+        required: true,
+        description: '워크스페이스 url'
+    })
+    @ApiParam({
+        name: 'id',
+        required: true,
+        description: '사용자 id'
+    })
+    @ApiQuery({
+        name: 'perPage',
+        required: true, //필수인지
+        description: '한 번에 가져오느 개수'
+    })
+    @ApiQuery({
+        name: 'page',
+        required: true, //필수인지
+        description: '불러올 페이지'
+    })
     @Get(':id/chats')
     getChat(@Query() query, @Param() param) {
         console.log(query, query.perPage, param.id);
@@ -26,6 +48,7 @@ export class DmsController {
      * @param body 
      * body로 들어오는 데이터가 무슨 타입인지 모르기 때문에 DTO 타입을 정해줄 때 인터페이스가 아닌 클래스로 작성한다**
      */
+    
     @Post(':id/chats')
     postChat(@Body() body) {}
 }

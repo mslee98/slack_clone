@@ -1,4 +1,33 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('channels')
-export class ChannelsController {}
+@ApiTags('CHANNEL')
+@Controller('api/workspaces/:url/channels')
+export class ChannelsController {
+    constructor() {}
+
+    @Get()
+    getALlMembers() {}
+
+    @Post()
+    createChannel() {}
+
+    @Get()
+    getSpecificChannel() {}
+
+    @Get(':name/chats')
+    getChats(@Query() query, @Param() param) {
+
+    }
+
+    @Post(':name/chats')
+    postChat() {}
+
+    @Get(':name/members')
+    getAllMembers() {}
+
+    @Get('name:/members')
+    inviteMembers() {}
+
+
+}
