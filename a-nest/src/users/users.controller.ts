@@ -3,6 +3,7 @@ import { JoinRequestDto } from './dto/join.request.dto';
 import { UsersService } from './users.service';
 import { ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserDTO } from 'src/common/dto/users.dto';
+import { User } from 'src/common/dto/decorators/user.decorator';
 
 @ApiTags('USERS')
 @Controller('users')
@@ -17,8 +18,8 @@ export class UsersController {
     })
     @ApiOperation({ summary: '내 정보 조회'})
     @Get()
-    getUsers(@Req() req) { // Request에 대한 정보는 @Req/@Request 를 통해 가져올 수 있음 | Response 데이터는 @Res/@Response
-        return req.user;    
+    getUsers(@User() user) { // Request에 대한 정보는 @Req/@Request 를 통해 가져올 수 있음 | Response 데이터는 @Res/@Response
+        return user;    
     }
 
     @ApiOperation({ summary: '회원가입'})

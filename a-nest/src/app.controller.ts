@@ -12,3 +12,8 @@ export class AppController {
     return this.appService.getHello();
   }
 }
+
+/**
+ * 기존 spring 패턴과 똑같아짐
+ * controller -> service -> repository -> entity
+ */
