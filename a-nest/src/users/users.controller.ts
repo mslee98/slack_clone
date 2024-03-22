@@ -1,11 +1,13 @@
-import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res, UseInterceptors } from '@nestjs/common';
 import { JoinRequestDto } from './dto/join.request.dto';
 import { UsersService } from './users.service';
 import { ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserDTO } from 'src/common/dto/users.dto';
-import { User } from 'src/common/dto/decorators/user.decorator';
+import { User } from 'src/common/decorators/user.decorator';
+import { UndefinedToNullInterceptor } from 'src/common/interceptors/undefinedToNull.interceptor';
 
-@ApiTags('USERS')
+@UseInterceptors(UndefinedToNullInterceptor) // 인터셉터 장착
+@ApiTags('USERS') // SwaggerUI 그룹화
 @Controller('users')
 export class UsersController {
     constructor(private usersService: UsersService) {

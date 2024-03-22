@@ -13,6 +13,16 @@ import { WorkspacesModule } from './workspaces/workspaces.module';
 import { ChannelsModule } from './channels/channels.module';
 import { DmsModule } from './dms/dms.module';
 import { UsersService } from './users/users.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { Channelchats } from './entities/Channelchats';
+import { Channelmembers } from './entities/Channelmembers';
+import { Channels } from './entities/Channels';
+import { Dms } from './entities/Dms';
+import { Mentions } from './entities/Mentions';
+import { Users } from './entities/Users';
+import { Workspacemembers } from './entities/Workspacemembers';
+import { Workspaces } from './entities/Workspaces';
 
 /**
  * forRoot(), forFeature(), register() => 위에 3개를 사용하는 이유는 따로 설정을 하기 위해서 필요
@@ -36,7 +46,36 @@ import { UsersService } from './users/users.service';
 @Module({
 
   /** 딱 봐도 미들웨어 중심이 아니고 모듈 중심이란게 느껴짐 */
-  imports: [ConfigModule.forRoot({ isGlobal: true }), UsersModule, WorkspacesModule, ChannelsModule, DmsModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }), 
+    UsersModule, 
+    WorkspacesModule, 
+    ChannelsModule, 
+    DmsModule,
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: '127.0.0.1',
+      port: 3306,
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+      entities: [
+        Channelchats,
+        Channelmembers,
+        Channels,
+        Dms,
+        Mentions,
+        Users,
+        Workspacemembers,
+        Workspaces,
+      ],
+      synchronize: false, // 처음 enity를 만들었다고 가정하면 첫 실행에서만 true 나머지는 false로 하는게 좋음 정의한 엔티티들을 DB에 넣어주는 동기화 작업임
+      autoLoadEntities: true, // 위에 쓰던가 autiLoadEntities쓰던가
+      logging: true, // log
+      keepConnectionAlive: true, // hot reloading 같은 거
+      charset: 'utf8mb4_general_ci',
+    })
+  ],
   controllers: [AppController],
   providers: [AppService, ConfigService, UsersService],
 })

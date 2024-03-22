@@ -7,10 +7,7 @@ export class AppService {
 
   }
   
-  getHello(): string {
-
-    this.userService.getUsers()
-
-    return 'Hello World!';
+  async getHello() {
+    return process.env.SECRET;
   }
 }

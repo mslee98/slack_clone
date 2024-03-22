@@ -8,7 +8,6 @@ declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const port = process.env.PORT || 3000;
 
   /** SwaggerUI 연동 */
   const config = new DocumentBuilder()
@@ -31,14 +30,17 @@ async function bootstrap() {
       saveUninitialized: false,
       secret: process.env.COOKIE_SECRET,
       cookie: {
-        httpOnly: true
-      }
+        httpOnly: true,
+      },
     }),
   );
   app.use(passport.initialize());
+  app.use(passport.session());
 
-  await app.listen(3000);
-  console.log(`Listen on PORT : ${port}`);
+  const PORT = process.env.PORT || 3095;
+
+  await app.listen(PORT);
+  console.log(`Listen on PORT : ${PORT}`);
 
   if (module.hot) {
     module.hot.accept();
@@ -48,5 +50,5 @@ async function bootstrap() {
 }
 
 
-
+console.log(process.env.DB_USERNAME+"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 bootstrap();
