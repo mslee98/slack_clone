@@ -1,52 +1,61 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   Index,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-} from "typeorm";
-import { Channelchats } from "./Channelchats";
-import { Channelmembers } from "./Channelmembers";
-import { Workspaces } from "./Workspaces";
+  UpdateDateColumn,
+} from 'typeorm';
+import { ChannelChats } from './ChannelChats';
+import { ChannelMembers } from './ChannelMembers';
+import { Users } from './Users';
+import { Workspaces } from './Workspaces';
 
-@Index("WorkspaceId", ["workspaceId"], {})
-@Entity("channels", { schema: "sleact" })
+@Index('WorkspaceId', ['WorkspaceId'], {})
+@Entity({ schema: 'sleact' })
 export class Channels {
-  @PrimaryGeneratedColumn({ type: "int", name: "id" })
+  @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column("varchar", { name: "name", length: 30 })
+  @Column('varchar', { name: 'name', length: 30 })
   name: string;
 
-  @Column("tinyint", {
-    name: "private",
+  @Column('tinyint', {
+    name: 'private',
     nullable: true,
     width: 1,
     default: () => "'0'",
   })
   private: boolean | null;
 
-  @Column("datetime", { name: "createdAt" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column("datetime", { name: "updatedAt" })
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column("int", { name: "WorkspaceId", nullable: true })
-  workspaceId: number | null;
+  @Column('int', { name: 'WorkspaceId', nullable: true })
+  WorkspaceId: number | null;
 
-  @OneToMany(() => Channelchats, (channelchats) => channelchats.channel)
-  channelchats: Channelchats[];
+  @OneToMany(() => ChannelChats, (channelchats) => channelchats.Channel)
+  ChannelChats: ChannelChats[];
 
-  @OneToMany(() => Channelmembers, (channelmembers) => channelmembers.channel)
-  channelmembers: Channelmembers[];
-
-  @ManyToOne(() => Workspaces, (workspaces) => workspaces.channels, {
-    onDelete: "SET NULL",
-    onUpdate: "CASCADE",
+  @OneToMany(() => ChannelMembers, (channelMembers) => channelMembers.Channel, {
+    cascade: ['insert'],
   })
-  @JoinColumn([{ name: "WorkspaceId", referencedColumnName: "id" }])
-  workspace: Workspaces;
+  ChannelMembers: ChannelMembers[];
+
+  @ManyToMany(() => Users, (users) => users.Channels)
+  Members: Users[];
+
+  @ManyToOne(() => Workspaces, (workspaces) => workspaces.Channels, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'WorkspaceId', referencedColumnName: 'id' }])
+  Workspace: Workspaces;
 }

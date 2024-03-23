@@ -15,13 +15,13 @@ import { DmsModule } from './dms/dms.module';
 import { UsersService } from './users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Channelchats } from './entities/Channelchats';
-import { Channelmembers } from './entities/Channelmembers';
+import { ChannelChats } from './entities/ChannelChats';
+import { ChannelMembers } from './entities/ChannelMembers';
 import { Channels } from './entities/Channels';
-import { Dms } from './entities/Dms';
+import { DMs } from './entities/DMs';
 import { Mentions } from './entities/Mentions';
 import { Users } from './entities/Users';
-import { Workspacemembers } from './entities/Workspacemembers';
+import { WorkspaceMembers } from './entities/WorkspaceMembers';
 import { Workspaces } from './entities/Workspaces';
 
 /**
@@ -60,17 +60,17 @@ import { Workspaces } from './entities/Workspaces';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       entities: [
-        Channelchats,
-        Channelmembers,
+        ChannelChats,
+        ChannelMembers,
         Channels,
-        Dms,
+        DMs,
         Mentions,
         Users,
-        Workspacemembers,
+        WorkspaceMembers,
         Workspaces,
       ],
       synchronize: false, // 처음 enity를 만들었다고 가정하면 첫 실행에서만 true 나머지는 false로 하는게 좋음 정의한 엔티티들을 DB에 넣어주는 동기화 작업임
-      autoLoadEntities: true, // 위에 쓰던가 autiLoadEntities쓰던가
+      //autoLoadEntities: true, // 위에 쓰던가 autiLoadEntities쓰던가
       logging: true, // log
       keepConnectionAlive: true, // hot reloading 같은 거
       charset: 'utf8mb4_general_ci',

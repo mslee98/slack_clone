@@ -1,12 +1,12 @@
 import { DataSource } from 'typeorm';
 import dotenv from 'dotenv';
-import { Channelchats } from './src/entities/Channelchats';
-import { Channelmembers } from './src/entities/Channelmembers';
+import { ChannelChats } from './src/entities/ChannelChats';
+import { ChannelMembers } from './src/entities/ChannelMembers';
 import { Channels } from './src/entities/Channels';
-import { Dms } from './src/entities/Dms';
+import { DMs } from './src/entities/DMs';
 import { Mentions } from './src/entities/Mentions';
 import { Users } from './src/entities/Users';
-import { Workspacemembers } from './src/entities/Workspacemembers';
+import { WorkspaceMembers } from './src/entities/WorkspaceMembers';
 import { Workspaces } from './src/entities/Workspaces';
 //import { DataSource } from 'typeorm/data-source';
 
@@ -20,13 +20,13 @@ const dataSource = new DataSource({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   entities: [
-    Channelchats,
-    Channelmembers,
+    ChannelChats,
+    ChannelMembers,
     Channels,
-    Dms,
+    DMs,
     Mentions,
     Users,
-    Workspacemembers,
+    WorkspaceMembers,
     Workspaces,
   ],
   migrations: [__dirname + '/migrations/*.ts'],

@@ -1,61 +1,63 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-} from "typeorm";
-import { Workspaces } from "./Workspaces";
-import { Users } from "./Users";
+  UpdateDateColumn,
+} from 'typeorm';
+import { Workspaces } from './Workspaces';
+import { Users } from './Users';
 
-@Index("ReceiverId", ["receiverId"], {})
-@Index("SenderId", ["senderId"], {})
-@Index("WorkspaceId", ["workspaceId"], {})
-@Entity("mentions", { schema: "sleact" })
+@Index('WorkspaceId', ['WorkspaceId'], {})
+@Index('SenderId', ['SenderId'], {})
+@Index('ReceiverId', ['ReceiverId'], {})
+@Entity({ schema: 'sleact', name: 'mentions' })
 export class Mentions {
-  @PrimaryGeneratedColumn({ type: "int", name: "id" })
+  @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column("enum", { name: "category", enum: ["chat", "dm", "system"] })
-  category: "chat" | "dm" | "system";
+  @Column('enum', { name: 'category', enum: ['chat', 'dm', 'system'] })
+  type: 'chat' | 'dm' | 'system';
 
-  @Column("int", { name: "chatId", nullable: true })
-  chatId: number | null;
+  @Column('int', { name: 'ChatId', nullable: true })
+  ChatId: number | null;
 
-  @Column("datetime", { name: "createdAt" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column("datetime", { name: "updatedAt" })
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column("int", { name: "WorkspaceId", nullable: true })
-  workspaceId: number | null;
+  @Column('int', { name: 'WorkspaceId', nullable: true })
+  WorkspaceId: number | null;
 
-  @Column("int", { name: "SenderId", nullable: true })
-  senderId: number | null;
+  @Column('int', { name: 'SenderId', nullable: true })
+  SenderId: number | null;
 
-  @Column("int", { name: "ReceiverId", nullable: true })
-  receiverId: number | null;
+  @Column('int', { name: 'ReceiverId', nullable: true })
+  ReceiverId: number | null;
 
-  @ManyToOne(() => Workspaces, (workspaces) => workspaces.mentions, {
-    onDelete: "SET NULL",
-    onUpdate: "CASCADE",
+  @ManyToOne(() => Workspaces, (workspaces) => workspaces.Mentions, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
   })
-  @JoinColumn([{ name: "WorkspaceId", referencedColumnName: "id" }])
-  workspace: Workspaces;
+  @JoinColumn([{ name: 'WorkspaceId', referencedColumnName: 'id' }])
+  Workspace: Workspaces;
 
-  @ManyToOne(() => Users, (users) => users.mentions, {
-    onDelete: "SET NULL",
-    onUpdate: "CASCADE",
+  @ManyToOne(() => Users, (users) => users.Mentions, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
   })
-  @JoinColumn([{ name: "SenderId", referencedColumnName: "id" }])
-  sender: Users;
+  @JoinColumn([{ name: 'SenderId', referencedColumnName: 'id' }])
+  Sender: Users;
 
-  @ManyToOne(() => Users, (users) => users.mentions2, {
-    onDelete: "SET NULL",
-    onUpdate: "CASCADE",
+  @ManyToOne(() => Users, (users) => users.Mentions2, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
   })
-  @JoinColumn([{ name: "ReceiverId", referencedColumnName: "id" }])
-  receiver: Users;
+  @JoinColumn([{ name: 'ReceiverId', referencedColumnName: 'id' }])
+  Receiver: Users;
 }

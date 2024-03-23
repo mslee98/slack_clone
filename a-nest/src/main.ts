@@ -49,6 +49,4 @@ async function bootstrap() {
 
 }
 
-
-console.log(process.env.DB_USERNAME+"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 bootstrap();

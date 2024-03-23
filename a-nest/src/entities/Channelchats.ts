@@ -1,47 +1,49 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-} from "typeorm";
-import { Channels } from "./Channels";
-import { Users } from "./Users";
+  UpdateDateColumn,
+} from 'typeorm';
+import { Users } from './Users';
+import { Channels } from './Channels';
 
-@Index("ChannelId", ["channelId"], {})
-@Index("UserId", ["userId"], {})
-@Entity("channelchats", { schema: "sleact" })
-export class Channelchats {
-  @PrimaryGeneratedColumn({ type: "int", name: "id" })
+@Index('UserId', ['UserId'], {})
+@Index('ChannelId', ['ChannelId'], {})
+@Entity({ schema: 'sleact', name: 'channelchats' })
+export class ChannelChats {
+  @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column("text", { name: "content" })
+  @Column('text', { name: 'content' })
   content: string;
 
-  @Column("datetime", { name: "createdAt" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column("datetime", { name: "updatedAt" })
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column("int", { name: "ChannelId", nullable: true })
-  channelId: number | null;
+  @Column('int', { name: 'UserId', nullable: true })
+  UserId: number | null;
 
-  @Column("int", { name: "UserId", nullable: true })
-  userId: number | null;
+  @Column('int', { name: 'ChannelId', nullable: true })
+  ChannelId: number | null;
 
-  @ManyToOne(() => Channels, (channels) => channels.channelchats, {
-    onDelete: "SET NULL",
-    onUpdate: "CASCADE",
+  @ManyToOne(() => Users, (users) => users.ChannelChats, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
   })
-  @JoinColumn([{ name: "ChannelId", referencedColumnName: "id" }])
-  channel: Channels;
+  @JoinColumn([{ name: 'UserId', referencedColumnName: 'id' }])
+  User: Users;
 
-  @ManyToOne(() => Users, (users) => users.channelchats, {
-    onDelete: "SET NULL",
-    onUpdate: "CASCADE",
+  @ManyToOne(() => Channels, (channels) => channels.ChannelChats, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
   })
-  @JoinColumn([{ name: "UserId", referencedColumnName: "id" }])
-  user: Users;
+  @JoinColumn([{ name: 'ChannelId', referencedColumnName: 'id' }])
+  Channel: Channels;
 }
