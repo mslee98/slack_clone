@@ -30,6 +30,7 @@ const dataSource = new DataSource({
     Workspaces,
   ],
   migrations: [__dirname + '/migrations/*.ts'],
+  //migrationsRun: true, 
   synchronize: false,
   logging: true,
 });
