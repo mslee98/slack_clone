@@ -52,6 +52,7 @@ import { Workspaces } from './entities/Workspaces';
     WorkspacesModule, 
     ChannelsModule, 
     DmsModule,
+    TypeOrmModule.forFeature([Users]),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: '127.0.0.1',

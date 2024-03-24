@@ -8,7 +8,7 @@ import { UndefinedToNullInterceptor } from 'src/common/interceptors/undefinedToN
 
 @UseInterceptors(UndefinedToNullInterceptor) // 인터셉터 장착
 @ApiTags('USERS') // SwaggerUI 그룹화
-@Controller('users')
+@Controller('api/users')
 export class UsersController {
     constructor(private usersService: UsersService) {
 
@@ -25,9 +25,9 @@ export class UsersController {
     }
 
     @ApiOperation({ summary: '회원가입'})
-    @Post()
-    postUsers(@Body() data: JoinRequestDto) {
-        this.usersService.postUsers(data.email, data.nickname, data.password);
+    @Post('')
+    join(@Body() body: JoinRequestDto) {
+        this.usersService.postUsers(body.email, body.nickname, body.password);
 
     }
 
