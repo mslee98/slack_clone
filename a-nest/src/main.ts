@@ -4,10 +4,21 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import session from 'express-session';
+import { HttpExceptionFilter } from './http-exception.filter';
+import { ValidationPipe } from '@nestjs/common';
 declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+
+  app.useGlobalPipes(new ValidationPipe())
+
+  /**
+   * HttpExceptionFilter
+   * 모든 컨트롤러에서 발생하는 HttpException을 아래에서 걸러준다.
+   */
+  app.useGlobalFilters(new HttpExceptionFilter())
 
   /** SwaggerUI 연동 */
   const config = new DocumentBuilder()
