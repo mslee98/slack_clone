@@ -10,12 +10,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ChannelChats } from './ChannelChats';
-import { ChannelMembers } from './ChannelMembers';
+import { ChannelChats } from './Channelchats';
+import { ChannelMembers } from './Channelmembers';
 import { Channels } from './Channels';
-import { DMs } from './DMs';
+import { DMs } from './Dms';
 import { Mentions } from './Mentions';
-import { WorkspaceMembers } from './WorkspaceMembers';
+import { WorkspaceMembers } from './Workspacemembers';
 import { Workspaces } from './Workspaces';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 

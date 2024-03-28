@@ -12,9 +12,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Channels } from './Channels';
-import { DMs } from './DMs';
+import { DMs } from './Dms';
 import { Mentions } from './Mentions';
-import { WorkspaceMembers } from './WorkspaceMembers';
+import { WorkspaceMembers } from './Workspacemembers';
 import { Users } from './Users';
 
 @Index('name', ['name'], { unique: true })

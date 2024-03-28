@@ -8,6 +8,18 @@ import { HttpExceptionFilter } from './http-exception.filter';
 import { ValidationPipe } from '@nestjs/common';
 declare const module: any;
 
+/**
+ * Nest.js Request Lift Cycle
+ * Http Request -> Middlewaer -> Guard -> Interceptors(pre, post) -> Pipe -> Controller
+ * 크게 위에 과정이며 이 과정중에서 middleware를 제외한 전 과정에서 Exception Filter가 작용한다.
+ * 
+ * Middleware: Nest에 전역적으로 바인딩 된 미들웨어 + app.use를 실행한 다음 경로에서 결정되는 모듈 바인딩 미들웨어를 실행
+ * Guard: 보통은 Permission체크로 많이 사용함
+ * Interceptors: 컨트롤러 전/후(pre/post)로 많이 사용
+ * Pipe: 요청하는 바디를 변환하는 작업 (벨리데이션 / 변환) 
+ * Controller: Routing처리 및 비즈니스 로직 실행
+ */
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 

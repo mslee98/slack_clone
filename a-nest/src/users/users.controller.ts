@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Post, Req, Res, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JoinRequestDto } from './dto/join.request.dto';
 import { UsersService } from './users.service';
 import { ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserDTO } from 'src/common/dto/users.dto';
 import { User } from 'src/common/decorators/user.decorator';
 import { UndefinedToNullInterceptor } from 'src/common/interceptors/undefinedToNull.interceptor';
+import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 
 @UseInterceptors(UndefinedToNullInterceptor) // 인터셉터 장착
 @ApiTags('USERS') // SwaggerUI 그룹화
@@ -41,8 +42,9 @@ export class UsersController {
     })
     @ApiOperation({ summary: '로그인'})
     @Post('login')
-    login(@Req() req) {
-        return req.user;
+    @UseGuards(LocalAuthGuard)
+    login(@User() user) {
+        return user;
     }
 
     @ApiOperation({ summary: '로그아웃'})

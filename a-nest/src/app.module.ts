@@ -15,13 +15,13 @@ import { DmsModule } from './dms/dms.module';
 import { UsersService } from './users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { ChannelChats } from './entities/ChannelChats';
-import { ChannelMembers } from './entities/ChannelMembers';
+import { ChannelChats } from './entities/Channelchats';
+import { ChannelMembers } from './entities/Channelmembers';
 import { Channels } from './entities/Channels';
-import { DMs } from './entities/DMs';
+import { DMs } from './entities/Dms';
 import { Mentions } from './entities/Mentions';
 import { Users } from './entities/Users';
-import { WorkspaceMembers } from './entities/WorkspaceMembers';
+import { WorkspaceMembers } from './entities/Workspacemembers';
 import { Workspaces } from './entities/Workspaces';
 
 /**
