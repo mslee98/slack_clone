@@ -12,6 +12,8 @@ import { Workspaces } from './src/entities/Workspaces';
 
 dotenv.config();
 
+console.log()
+
 const dataSource = new DataSource({
   type: 'mysql',
   host: '127.0.0.1',

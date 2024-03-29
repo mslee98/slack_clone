@@ -40,7 +40,7 @@ export class Users {
   @Column('varchar', { name: 'password', length: 100, select: false })
   password: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({insert: true})
   createdAt: Date;
 
   @UpdateDateColumn()

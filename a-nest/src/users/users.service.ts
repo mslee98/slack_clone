@@ -31,17 +31,20 @@ export class UsersService {
        * UnauthorizedException은 401을 의미
        * Exception을 상속받아 더 세부적으로도 나누어져있음
        */
-      if(!email) {
-        throw new HttpException('이메일이 없습니다.', 400);
-      }
+
+
+      //이 부분은 Entities에서 처리하기 때문에 필요 없어짐!
+      // if(!email) {
+      //   throw new HttpException('이메일이 없습니다.', 400);
+      // }
       
-      if(!nickname) {
-        throw new HttpException('닉네임이 없습니다.', 400);
-      }
+      // if(!nickname) {
+      //   throw new HttpException('닉네임이 없습니다.', 400);
+      // }
       
-      if(!password) {
-        throw new BadRequestException('비밀번호가 없습니다.');
-      }
+      // if(!password) {
+      //   throw new BadRequestException('비밀번호가 없습니다.');
+      // }
 
       const user = await this.usersRepository.findOne({where: {email}})
 

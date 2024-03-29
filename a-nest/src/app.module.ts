@@ -23,6 +23,7 @@ import { Mentions } from './entities/Mentions';
 import { Users } from './entities/Users';
 import { WorkspaceMembers } from './entities/Workspacemembers';
 import { Workspaces } from './entities/Workspaces';
+import { AuthModule } from './auth/auth.module';
 
 /**
  * forRoot(), forFeature(), register() => 위에 3개를 사용하는 이유는 따로 설정을 하기 위해서 필요
@@ -46,8 +47,14 @@ import { Workspaces } from './entities/Workspaces';
 @Module({
 
   /** 딱 봐도 미들웨어 중심이 아니고 모듈 중심이란게 느껴짐 */
+  /**
+   * 로그인 하는 과정을 생각해보면
+   * App.module <-> Auth.module <-> Users.module 이렇게 3개가 연결되있다고 보면 되는데
+   * A -> B -> C 라고 치면 A -> B만 B -> C만 이 아니라 A -> C도 연결해줘야한다고 생각하니까 괜찮은듯
+   */
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }), 
+    ConfigModule.forRoot({ isGlobal: true }),
+    AuthModule, 
     UsersModule, 
     WorkspacesModule, 
     ChannelsModule, 
@@ -55,7 +62,7 @@ import { Workspaces } from './entities/Workspaces';
     TypeOrmModule.forFeature([Users]),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: '127.0.0.1',
+      host: 'localhost',
       port: 3306,
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,

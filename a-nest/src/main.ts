@@ -6,6 +6,8 @@ import passport from 'passport';
 import session from 'express-session';
 import { HttpExceptionFilter } from './http-exception.filter';
 import { ValidationPipe } from '@nestjs/common';
+
+import passportConfig from 'passport';
 declare const module: any;
 
 /**
@@ -22,6 +24,8 @@ declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  //passportConfig();
 
 
   app.useGlobalPipes(new ValidationPipe())
@@ -57,6 +61,11 @@ async function bootstrap() {
       },
     }),
   );
+
+  /**
+   * Passport아래와 같이 initalize(), session() 호출해야 정상적으로 세션에 반영한다.
+   * 만약 JWT토큰으로 session을 사용하지 않는 경우 passport.session()사용 안해도 문제는 없음
+   */
   app.use(passport.initialize());
   app.use(passport.session());
 
