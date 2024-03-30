@@ -4,6 +4,8 @@ import { UsersController } from './users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Users } from 'src/entities/Users';
 import { AuthModule } from 'src/auth/auth.module';
+import { WorkspaceMembers } from 'src/entities/WorkspaceMembers';
+import { ChannelMembers } from 'src/entities/ChannelMembers';
 
 /**
  * 모듈 생성 가이드 
@@ -16,7 +18,7 @@ import { AuthModule } from 'src/auth/auth.module';
 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Users]), AuthModule],
+  imports: [TypeOrmModule.forFeature([Users, WorkspaceMembers, ChannelMembers]), AuthModule],
   providers: [UsersService],
   controllers: [UsersController],
   exports: [UsersService]

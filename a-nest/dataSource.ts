@@ -1,12 +1,12 @@
 import { DataSource } from 'typeorm';
 import dotenv from 'dotenv';
-import { ChannelChats } from './src/entities/Channelchats';
-import { ChannelMembers } from './src/entities/Channelmembers';
+import { ChannelChats } from './src/entities/ChannelChats';
+import { ChannelMembers } from './src/entities/ChannelMembers';
 import { Channels } from './src/entities/Channels';
-import { DMs } from './src/entities/Dms';
+import { DMs } from './src/entities/DMs';
 import { Mentions } from './src/entities/Mentions';
 import { Users } from './src/entities/Users';
-import { WorkspaceMembers } from './src/entities/Workspacemembers';
+import { WorkspaceMembers } from './src/entities/WorkspaceMembers';
 import { Workspaces } from './src/entities/Workspaces';
 //import { DataSource } from 'typeorm/data-source';
 

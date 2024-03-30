@@ -15,13 +15,13 @@ import { DmsModule } from './dms/dms.module';
 import { UsersService } from './users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { ChannelChats } from './entities/Channelchats';
-import { ChannelMembers } from './entities/Channelmembers';
+import { ChannelChats } from './entities/ChannelChats';
+import { ChannelMembers } from './entities/ChannelMembers';
 import { Channels } from './entities/Channels';
-import { DMs } from './entities/Dms';
+import { DMs } from './entities/DMs';
 import { Mentions } from './entities/Mentions';
 import { Users } from './entities/Users';
-import { WorkspaceMembers } from './entities/Workspacemembers';
+import { WorkspaceMembers } from './entities/WorkspaceMembers';
 import { Workspaces } from './entities/Workspaces';
 import { AuthModule } from './auth/auth.module';
 
@@ -59,7 +59,7 @@ import { AuthModule } from './auth/auth.module';
     WorkspacesModule, 
     ChannelsModule, 
     DmsModule,
-    TypeOrmModule.forFeature([Users]),
+    TypeOrmModule.forFeature([Users, WorkspaceMembers, ChannelMembers]),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
