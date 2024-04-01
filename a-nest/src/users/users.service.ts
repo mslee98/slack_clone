@@ -95,9 +95,9 @@ export class UsersService {
         return true;
 
       } catch(error) {
-        queryRunner.rollbackTransaction();
+        await queryRunner.rollbackTransaction();
       } finally {
-        queryRunner.release();
+        await queryRunner.release();
       }
   }
 }

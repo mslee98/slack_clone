@@ -24,6 +24,8 @@ export class WorkspacesController {
         @User() user: Users,
         @Body() body: CreateWorkspaceDto 
     ) {
+        // 이런경우 단위 테스트를 어떻게 진행해야함?
+        // user.id 임의의 값 넣어주고 하는건가?
         return this.workspacesService.createWorkspace(body.url, body.workspace, user.id)
     }
 
@@ -31,7 +33,9 @@ export class WorkspacesController {
     getAllMembersFromWorkspace() {}
 
     @Post(':url/members')
-    inviteMembersToWorkspace() {}
+    inviteMembersToWorkspace() {
+        
+    }
 
     @Delete(':url/members/:id')
     kickMemberFromWorkspace() {}

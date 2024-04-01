@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { channel } from 'diagnostics_channel';
 import { ChannelMembers } from 'src/entities/ChannelMembers';
 import { Channels } from 'src/entities/Channels';
 import { Users } from 'src/entities/Users';
@@ -45,8 +46,15 @@ export class WorkspacesService {
         })
     }
 
+    /**
+     * @param name 
+     * @param url 
+     * @param myId 
+     */
     async createWorkspace(name: string, url: string, myId: number) {
         
+        console.log(name, url, myId)
+
         const queryRunner = this.dataSource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
@@ -92,6 +100,7 @@ export class WorkspacesService {
             await queryRunner.manager.getRepository(ChannelMembers).save(channelMembers);
 
             await queryRunner.commitTransaction();
+            return true;
         } catch(error) {
             console.log("@@@@@@@@@@@@에러 발생----롤백!!!@@@@@@@@@@@@@@@")
             await queryRunner.rollbackTransaction();
@@ -132,5 +141,63 @@ export class WorkspacesService {
             .getMany();
     }
 
+    async createWorkspaceMembers(url: string, email: string) {
 
+
+        /**
+         * TypeORM에서 JOIN은 Relactions를 쓰거나 join문을 쓰든 상관은 없음
+         * 단, Relations를 사용하려면 Entities에 관계를 정의해야만함
+         * 만약 아래를 Relations로 표현한다면
+         * -----------------------------------------------------
+         * const workpsace = this.workspaceRepository.findOne({
+         *  where: {url},
+         *  relations: ['Channels]
+         * })
+         * ------------------------------------------------------
+         * 와 같이 사용할 수 있으며 쿼리 빌더로도 조회할 수 있다(취향차이)
+         * ------------------------------------------------------
+         * this.workspaceRepository.createQueryBuilder('w').innerJoinAndSelect('w.Channels', 'channels').getOne()
+         * ------------------------------------------------------
+         * 
+         * TypeORM은 기본적으로 innerJoin하면 조인한 애들은 가져오지 않는다(조건으로 필터링은 가능함 where절).
+         */
+        const workspace = await this.workspacesRepository.findOne({
+            where: {url},
+            join: {
+                alias: 'workspace',
+                innerJoinAndSelect: { // select까지 같이 하며 조인한 테이블도 가져온다!
+                    channels: 'workspace.Channels'
+                }
+            }
+        })
+
+        const user = await this.usersRepository.findOne({where: {email}});
+        if(!user) null;
+
+        //아래 과정들 다 트랜잭션 붙이는게 좋음
+        const workspaceMember = new WorkspaceMembers();
+        workspaceMember.WorkspaceId = workspace.id;
+        workspaceMember.UserId = user.id;
+        await this.workspaceMembersRepository.save(workspaceMember);
+
+        const channelMember = new ChannelMembers();
+        channelMember.ChannelId = workspace.Channels.find(
+            (v) => v.name === '일반',
+        ).id;
+        channelMember.UserId = user.id;
+        await this.channelMembersRepository.save(channelMember);
+    }
+
+    async getWorkspaceMember(url: string, id: number) {
+        // QueryBuilder는 확실히 많이 써볼수밖에 없겠네..
+        return this.usersRepository
+            .createQueryBuilder('user')
+            .where('user.id = : id', {id})
+            // .where('user.id = :id AND user.name = :name') 이런식으로 AND 적어줘도 상관은 없으나
+            // .andWhere이라는 옵션이 있으니 이걸 이용하자 .orWhere 이런것도 있음
+            // .andWhere('user.name = :name', { name }) 이런식으로 사용
+            .innerJoin('user.Workspaces', 'workspaces', 'workspaces.url = :url', {
+                url
+            }).getOne();
+        }
 }
