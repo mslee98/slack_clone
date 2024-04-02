@@ -24,6 +24,7 @@ import { Users } from './entities/Users';
 import { WorkspaceMembers } from './entities/WorkspaceMembers';
 import { Workspaces } from './entities/Workspaces';
 import { AuthModule } from './auth/auth.module';
+import { EventsModule } from './events/events.module';
 
 /**
  * forRoot(), forFeature(), register() => 위에 3개를 사용하는 이유는 따로 설정을 하기 위해서 필요
@@ -82,7 +83,8 @@ import { AuthModule } from './auth/auth.module';
       logging: process.env.NODE_ENV !== 'production', // log
       keepConnectionAlive: true, // hot reloading 같은 거
       charset: 'utf8mb4_general_ci',
-    })
+    }),
+    EventsModule
   ],
   controllers: [AppController],
   providers: [AppService, ConfigService, UsersService],

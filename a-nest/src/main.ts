@@ -8,6 +8,8 @@ import { HttpExceptionFilter } from './http-exception.filter';
 import { ValidationPipe } from '@nestjs/common';
 
 import passportConfig from 'passport';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import path from 'path';
 declare const module: any;
 
 /**
@@ -23,7 +25,11 @@ declare const module: any;
  */
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  
+  // Nest를 Festify로도 만들 수 있어서NestExpressApplication이런 제네릭 추가해주면 좋음
+  // 명시를 안해주면 기본 내장된 모듈이 다를수도있기 떄문임
+  // useStaticAssets같은것들은 Festify에는 없어서 에러나지만 Express로 제네릭 해주면 추론이 가능하다.
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   //passportConfig();
 
@@ -35,6 +41,24 @@ async function bootstrap() {
    * 모든 컨트롤러에서 발생하는 HttpException을 아래에서 걸러준다.
    */
   app.useGlobalFilters(new HttpExceptionFilter())
+
+  // cors
+  if(process.env.NODE_ENV !== 'production') {
+    app.enableCors({
+      origin: ['https://host주소'],
+      credentials: true,
+    })
+  } else {
+    app.enableCors({
+      origin: true,
+      credentials: true,
+    })
+  }
+
+  //image static
+  app.useStaticAssets(path.join(__dirname, '..', 'uploads'), {
+    prefix: '/uploads' 
+  })
 
   /** SwaggerUI 연동 */
   const config = new DocumentBuilder()
