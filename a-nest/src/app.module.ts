@@ -79,7 +79,7 @@ import { AuthModule } from './auth/auth.module';
       ],
       synchronize: false, // 처음 enity를 만들었다고 가정하면 첫 실행에서만 true 나머지는 false로 하는게 좋음 정의한 엔티티들을 DB에 넣어주는 동기화 작업임
       //autoLoadEntities: true, // 위에 쓰던가 autiLoadEntities쓰던가
-      logging: true, // log
+      logging: process.env.NODE_ENV !== 'production', // log
       keepConnectionAlive: true, // hot reloading 같은 거
       charset: 'utf8mb4_general_ci',
     })

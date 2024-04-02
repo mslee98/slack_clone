@@ -116,7 +116,7 @@ export class WorkspacesService {
      * 
      */
     async getWowkspaceMembers(url: string) {
-        this.usersRepository
+        return this.usersRepository
             .createQueryBuilder('user')
             // 위에 alias를 통해 아래 join문에서 user를 쓸 수 있는거임!
             // 대신 조인할거면 Entities에 관계를 다 설정해주어야 함
@@ -131,7 +131,7 @@ export class WorkspacesService {
             .innerJoin(
                 'members.Workspace', // 1, join할 컬럼 
                 'workspace',         // 2. join alias 설정
-                'w.url= :url',       // 3. 4번째 변수가 url로 들어가려면 4번째에 url변수 넣어줘야함 'w.url= ${url}' 이것도 가능한데 SQLInjection에 위험
+                'workspace.url= :url',       // 3. 4번째 변수가 url로 들어가려면 4번째에 url변수 넣어줘야함 'w.url= ${url}' 이것도 가능한데 SQLInjection에 위험
                 {url: url}           // 4. 이런식으로 변수를 선언해두면
             )
             // getRawMany() -> | ID | NAME | PASSWORD | Workspace.NAME | Workspace.URL | MySQL에서 Join문 결과를 그대로 가져다줌()

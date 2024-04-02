@@ -31,22 +31,22 @@ export class ChannelsService {
     }
 
     async getWorkspaceChannels(url: string, myId: number) {
-        return this.channelChatsRepository
-            .createQueryBuilder('channels')
-            .innerJoinAndSelect(
-                'channels.ChannelMembers',
-                'channelMembers',
-                'channelMembers.userId = :myId',
-                {myId}
-            )
-            .innerJoinAndSelect(
-                'channels.Workspace',
-                'workspace',
-                'workspace.url = :url',
-                {url}
-            )
-            .getMany();
-    }
+        return this.channelsRepository
+          .createQueryBuilder('channels')
+          .innerJoinAndSelect(
+            'channels.ChannelMembers',
+            'channelMembers',
+            'channelMembers.userId = :myId',
+            { myId },
+          )
+          .innerJoinAndSelect(
+            'channels.Workspace',
+            'workspace',
+            'workspace.url = :url',
+            { url },
+          )
+          .getMany();
+      }
 
     async getWorkspaceChannel(url: string, name: string) {
         return this.channelsRepository.findOne({
@@ -99,15 +99,19 @@ export class ChannelsService {
         page: number,
     ) {
         return this.channelChatsRepository
-            .createQueryBuilder('channelChats')
-            .innerJoin('channelChats.Channel', 'channel', 'channel.name = :name', {name})
-            .innerJoin('channel.Workspace', 'workspace', 'workspace.url = :url', {url})
-            .innerJoinAndSelect('channelChats.User', 'user')
-            .orderBy('channelChats.createAt', 'DESC')
-            .take(perPage) // Limit
-            .skip(perPage * (page-1)) // Offset
-            .getMany()
-    }
+          .createQueryBuilder('channelChats')
+          .innerJoin('channelChats.Channel', 'channel', 'channel.name = :name', {
+            name,
+          })
+          .innerJoin('channel.Workspace', 'workspace', 'workspace.url = :url', {
+            url,
+          })
+          .innerJoinAndSelect('channelChats.User', 'user')
+          .orderBy('channelChats.createdAt', 'DESC')
+          .take(perPage)
+          .skip(perPage * (page - 1))
+          .getMany();
+      }
 
     async getChannelUnreadsCount(url, name, after) {
         const channel = await this.channelsRepository
@@ -118,9 +122,35 @@ export class ChannelsService {
         return this.channelChatsRepository.count({
             where: {
                 ChannelId: channel.id,
-                createdAt: MoreThan(new Date(after)) // createAt > "2024-04-01" 이 의미랑 같음
+                createdAt: MoreThan(new Date(after)) // createAt > "2024-04-01" 이 의미랑 같음 이런거 못하겠으면 queryBuilder쓰면 where('createAt >') 이런식으로 쿼리 연산자 자유롭게 사용이 가능하다.
             }
         })
+    }
+
+    // {url, name, content, myId} 객체 처리하면 순서필요없어서 이것도 방법임
+    async postChat({url, name, content, myId}) {
+        const channel = await this.channelsRepository
+            .createQueryBuilder('channel')
+            .innerJoin('channel.Workspace', 'workspace', 'workspace.url = :url', {url})
+            .where('channel.name = :name', {name})
+            .getOne()
+        
+        if(!channel) {
+            throw new NotFoundException('채널이 존재하지 않습니다.');
+        }
+
+        const chats = new ChannelChats();
+        chats.content = content;
+        chats.UserId = myId;
+        chats.ChannelId = channel.id;
+        const savedChat = await this.channelChatsRepository.save(chats);
+        const chatWithUser = await this.channelChatsRepository.findOne({
+            where: {id: savedChat.id},
+            relations: ['User', 'Channel']
+        })
+
+        // socket.io로 워크스페이스+채널 사용자한테 전송
+
     }
 
 }
