@@ -27,7 +27,7 @@ export class UsersService {
       where: { email },
       select: ['id', 'email', 'password'],
     });
-  }
+  };
 
   async join(email: string, nickname: string, password: string) {
     const queryRunner = this.dataSource.createQueryRunner();

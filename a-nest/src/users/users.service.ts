@@ -1,11 +1,10 @@
-import { BadRequestException, HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from 'src/entities/Users';
 import { DataSource, Repository } from 'typeorm';
 import bcrypt from 'bcrypt';
-//import { HttpExceptionFilter } from 'src/http-exception.filter';
-import { WorkspaceMembers } from 'src/entities/WorkspaceMembers';
-import { ChannelMembers } from 'src/entities/ChannelMembers';
+import { Users } from '../entities/Users'
+import { WorkspaceMembers } from '../entities/WorkspaceMembers';
+import { ChannelMembers } from '../entities/ChannelMembers';
 
 @Injectable()
 export class UsersService {
@@ -24,9 +23,16 @@ export class UsersService {
     private dataSource: DataSource
   ) {}
 
-
+  
   getUsers() {
     throw new Error('Method not implemented.');
+  }
+
+  async findByEmail(email: string) {
+    return this.usersRepository.findOne({
+      where: {email},
+      select: ['id','email', 'password']
+    })
   }
 
   async postUsers(email: string, nickname: string, password: string) {

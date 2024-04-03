@@ -50,14 +50,11 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       const newNamespace = socket.nsp;
       console.log('login', newNamespace);
       onlineMap[socket.nsp.name][socket.id] = data.id;
-      newNamespace.emit('onlineList', Object.values(onlineMap[socket.nsp.name]))
-      
-      console.log("?????????????????????")
-
+      newNamespace.emit('onlineList', Object.values(onlineMap[socket.nsp.name]));
       data.channels.forEach((channel) => {
         console.log('join', socket.nsp.name, channel);
         socket.join(`${socket.nsp.name}-${channel}`);
-      })
+      });
   }
 
   // OnGatewayInit
@@ -81,6 +78,7 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     console.log('disconnected', socket.nsp.name);
     const newNamespace = socket.nsp;
     delete onlineMap[socket.nsp.name][socket.id];
+    // Object.values() 객체를 배열로 바꿔줌 - for -in 구문으로 반복한 결과와 같음
     newNamespace.emit('onlineList', Object.values(onlineMap[socket.nsp.name]))
     
   }

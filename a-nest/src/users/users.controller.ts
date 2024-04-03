@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Req, Res, UseGuards, UseInterceptors } fro
 import { JoinRequestDto } from './dto/join.request.dto';
 import { UsersService } from './users.service';
 import { ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UserDTO } from 'src/common/dto/users.dto';
+import { UserDTO } from '../common/dto/users.dto'//'src/common/dto/users.dto';
 import { User } from 'src/common/decorators/user.decorator';
 import { UndefinedToNullInterceptor } from 'src/common/interceptors/undefinedToNull.interceptor';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';

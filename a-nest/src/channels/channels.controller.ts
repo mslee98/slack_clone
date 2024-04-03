@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ChannelsService } from './channels.service';
 import { User } from 'src/common/decorators/user.decorator';
@@ -55,15 +55,14 @@ export class ChannelsController {
         @Body() body: PostChatDto,
         @User() user,
         ) {
+
         return this.channelsService.postChat({
             url, 
             name, 
             content: body.content, 
-            myId: user.myId
+            myId: user.id
         })
     }
-
-
 
     // 단일/멀티 파일업로드 변수 약간 다르니 주의하셈!!
     // SingleFileupload => FileInterceptor - UploadFile() file: Express.Multer.File
@@ -92,6 +91,7 @@ export class ChannelsController {
          * exporess에서 사용하던 방식을 어떻게 바뀌는지 잘 파악
          * 
          */
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",user.id)
         return this.channelsService.createWorkspaceChannelImages(url, name, files, user.id)
     }
 

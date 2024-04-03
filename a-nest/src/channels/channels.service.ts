@@ -156,6 +156,8 @@ export class ChannelsService {
         })
 
         // socket.io로 워크스페이스+채널 사용자한테 전송
+        console.log(`/ws-${url}-${channel.id}`+"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        console.log("#####################",chatWithUser)
         this.eventsGateway.server.to(`/ws-${url}-${channel.id}`).emit('message',chatWithUser);        
 
     }
@@ -165,7 +167,7 @@ export class ChannelsService {
         url: string, 
         name: string, 
         files: Express.Multer.File[], 
-        id: any
+        myId: number
     ) {
         console.log(files);
         const channel = await this.channelsRepository
@@ -181,7 +183,7 @@ export class ChannelsService {
         for(let i=0; i<files.length; i++) {
             const chats = new ChannelChats();
             chats.content = files[i].path;
-            chats.UserId = id
+            chats.UserId = myId
             chats.ChannelId = channel.id;
             const savedChat = await this.channelChatsRepository.save(chats);
             const chatWithUser = await this.channelChatsRepository.findOne({
