@@ -4,7 +4,7 @@ import { ChannelMembers } from '../entities/ChannelMembers';
 import { Users } from '../entities/Users';
 import { WorkspaceMembers } from '../entities/WorkspaceMembers';
 import { UsersService } from './users.service';
-import { Connection, DataSource } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 // Mock은 class로 생성해도 되고 함수로 생성해도 문제는 없음
 // 대신 함수로 작성했다면 useClass => useFactory로 변경해줘야한다.
