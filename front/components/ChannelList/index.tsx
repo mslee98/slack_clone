@@ -9,6 +9,7 @@ import useSWR from 'swr';
 interface Props {
   channelData?: IChannel[];
   userData?: IUser;
+  
 }
 
 const ChannelList: FC<Props> = () => {
